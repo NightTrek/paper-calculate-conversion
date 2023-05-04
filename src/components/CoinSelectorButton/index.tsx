@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import Image from 'next/image';
@@ -24,11 +25,11 @@ const CoinSelectionModal = (props: ISelectionModalProps) => {
   if (!props.coinNameSelector) return <div />;
   return (
     <div className="no-scrollbar absolute left-0 top-[64px] z-20 flex h-[256px] w-full flex-col content-evenly justify-start overflow-y-scroll rounded-2xl bg-white shadow-md">
-      {props.coinList.map((coinName) => {
-        if (!coinName) return <div key={coinName} />;
+      {props.coinList.map((coinName, index) => {
+        if (!coinName) return <div key={index} />;
         return (
           <div
-            key={coinName}
+            key={index}
             className="my-1 flex cursor-pointer items-center justify-between rounded-lg px-2 py-1 hover:bg-gray-300 active:bg-gray-300"
             onClick={() => {
               props.setCoinName(coinName);
