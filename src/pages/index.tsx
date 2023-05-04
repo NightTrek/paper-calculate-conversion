@@ -8,7 +8,7 @@ import SwapButton from '@/components/SwapButtonDivider/SwapButtonDivider';
 import { COINS } from '@/config/CoinConfig';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
-import { FetchCryptoComparePrice } from '@/utils/priceAPI';
+import { FetchNextCryptoPriceAPI } from '@/utils/priceAPI';
 
 type ISelectorState = {
   coinName: string | null;
@@ -26,7 +26,7 @@ type IPriceState = { [key: string]: string };
 const Swap = () => {
   const [state, setState] = React.useState<ISwapState>({
     selectorA: { coinName: null, inputState: '' },
-    selectorB: { coinName: null, inputState: '' },
+    selectorB: { coinName: null, inputState: '0.0' },
     selection: Object.keys(COINS),
   });
 
@@ -41,7 +41,6 @@ const Swap = () => {
     const interval = setInterval(() => {
       // keep reducing refresh until it hits zero and stop
       if (refresh > 0 && refresh !== 0) {
-        console.log('refresh: ', refresh - 1);
         setRefresh(refresh - 1);
       }
     }, 1000);
@@ -59,9 +58,10 @@ const Swap = () => {
     if (!prices[`${coinTo}_${coinFrom}`] || refresh < 1) {
       // if the price has never been searched seach it and reset the refresh
       // if the refresh is down to 0 also search it.
+
       console.log('fetching API');
       // setRefresh(30);
-      FetchCryptoComparePrice({ coinFrom, coinTo })
+      FetchNextCryptoPriceAPI({ coinFrom, coinTo })
         .then((data) => {
           if (data.key !== `${coinTo}_${coinFrom}`)
             throw new Error('api error my b');
@@ -84,14 +84,19 @@ const Swap = () => {
       return;
     if (
       parseFloat(state.selectorA.inputState) > 0 &&
-      prices[`${state.selectorA.coinName}_${state.selectorB.coinName}`]
+      prices[`${state.selectorB.coinName}_${state.selectorA.coinName}`]
     ) {
       const outputPrice =
-        parseFloat(state.selectorA.inputState) *
-        parseFloat(
-          prices[`${state.selectorA.coinName}_${state.selectorB.coinName}`] ||
-            '0'
-        );
+        Math.floor(
+          (parseFloat(state.selectorA.inputState) /
+            parseFloat(
+              prices[
+                `${state.selectorB.coinName}_${state.selectorA.coinName}`
+              ] || '0'
+            )) *
+            10000
+        ) / 10000;
+      if (state.selectorB.inputState === `${outputPrice}`) return;
       setState({
         ...state,
         selectorB: {
@@ -99,8 +104,16 @@ const Swap = () => {
           inputState: `${outputPrice}`,
         },
       });
+
+      if (refresh < 1 && state.selectorB.inputState !== `price refreshing...`) {
+        setState({
+          ...state,
+          selectorB: { ...state.selectorB, inputState: `price refreshing...` },
+        });
+      }
     }
-  });
+  }, [state.selectorA, state.selectorB, prices, refresh]);
+
   const setSelectorInput = (selectorA: boolean, input: string) => {
     if (selectorA) {
       setState({
@@ -199,13 +212,17 @@ const Swap = () => {
           />
         </div>
         <div className="flex h-[48px] w-full items-center justify-between px-2">
-          <span>Output</span>
-          <div>
-            <span className="text-3xl">29000 </span>
-            <span className="px-2 text-3xl font-semibold">
-              {state.selectorB.coinName}
-            </span>
-          </div>
+          {state.selectorB.coinName && (
+            <>
+              <div className="pb-4 text-2xl font-bold">To</div>
+              <div>
+                <span className="text-3xl">{state.selectorB.inputState} </span>
+                <span className="px-2 text-3xl font-semibold">
+                  {state.selectorB.coinName}
+                </span>
+              </div>
+            </>
+          )}
         </div>
         {/*  Pricing Disclamer Notation */}
         {state.selectorA.coinName && state.selectorB.coinName && (
