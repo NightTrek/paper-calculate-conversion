@@ -3,10 +3,12 @@ import Image from 'next/image';
 import * as React from 'react';
 
 import CoinSelectorButton from '@/components/CoinSelectorButton';
+import LinearProgressBar from '@/components/LinearProgressBar/LinearProgressBar';
 import SwapButton from '@/components/SwapButtonDivider/SwapButtonDivider';
 import { COINS } from '@/config/CoinConfig';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
+import { FetchCryptoComparePrice } from '@/utils/priceAPI';
 
 type ISelectorState = {
   coinName: string | null;
@@ -32,12 +34,73 @@ const Swap = () => {
     USD_USD: '1',
   });
 
-  React.useEffect(() => {
-    // fetch the prices somehow
-    // return the prices
-    setPrices({ ...prices, USD_USD: '1' });
-  }, [prices, state.selectorA.coinName, state.selectorB.coinName]);
+  const [refresh, setRefresh] = React.useState<number>(3);
 
+  // interval system
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      // keep reducing refresh until it hits zero and stop
+      if (refresh > 0 && refresh !== 0) {
+        console.log('refresh: ', refresh - 1);
+        setRefresh(refresh - 1);
+      }
+    }, 1000);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [refresh]);
+
+  // price fetching API handler
+  React.useEffect(() => {
+    if (state.selectorA.coinName === null || state.selectorB.coinName === null)
+      return;
+    const coinFrom = state.selectorA.coinName;
+    const coinTo = state.selectorB.coinName;
+    if (!prices[`${coinTo}_${coinFrom}`] || refresh < 1) {
+      // if the price has never been searched seach it and reset the refresh
+      // if the refresh is down to 0 also search it.
+      console.log('fetching API');
+      // setRefresh(30);
+      FetchCryptoComparePrice({ coinFrom, coinTo })
+        .then((data) => {
+          if (data.key !== `${coinTo}_${coinFrom}`)
+            throw new Error('api error my b');
+          setRefresh(30);
+          setPrices({
+            ...prices,
+            [data.key]: data.value,
+          });
+        })
+        .catch((err) => {
+          console.log('API ERR', err);
+          setRefresh(10);
+        });
+    }
+  }, [prices, state.selectorA.coinName, state.selectorB.coinName, refresh]);
+
+  // Math and conversion Handler
+  React.useEffect(() => {
+    if (state.selectorA.coinName === null || state.selectorB.coinName === null)
+      return;
+    if (
+      parseFloat(state.selectorA.inputState) > 0 &&
+      prices[`${state.selectorA.coinName}_${state.selectorB.coinName}`]
+    ) {
+      const outputPrice =
+        parseFloat(state.selectorA.inputState) *
+        parseFloat(
+          prices[`${state.selectorA.coinName}_${state.selectorB.coinName}`] ||
+            '0'
+        );
+      setState({
+        ...state,
+        selectorB: {
+          ...state.selectorB,
+          inputState: `${outputPrice}`,
+        },
+      });
+    }
+  });
   const setSelectorInput = (selectorA: boolean, input: string) => {
     if (selectorA) {
       setState({
@@ -135,15 +198,29 @@ const Swap = () => {
             inputState={state.selectorB.inputState}
           />
         </div>
-        {/*  Pricing Notation */}
+        <div className="flex h-[48px] w-full items-center justify-between px-2">
+          <span>Output</span>
+          <div>
+            <span className="text-3xl">29000 </span>
+            <span className="px-2 text-3xl font-semibold">
+              {state.selectorB.coinName}
+            </span>
+          </div>
+        </div>
+        {/*  Pricing Disclamer Notation */}
         {state.selectorA.coinName && state.selectorB.coinName && (
-          <div className="flex w-full items-center justify-start p-2">
-            <Image src="/Icons/Info.svg" alt="info" width={24} height={24} />
-            <span className="px-2">{`1 ${state.selectorB.coinName} = ${
-              prices[
-                `${state.selectorB.coinName}_${state.selectorA.coinName}`
-              ] || '0'
-            } ${state.selectorA.coinName}`}</span>
+          <div className="flex w-full flex-col items-center justify-evenly">
+            <div className="flex w-full items-center justify-between p-2">
+              <Image src="/Icons/Info.svg" alt="info" width={24} height={24} />
+              <span className="px-2">{`1 ${state.selectorB.coinName} = ${
+                prices[
+                  `${state.selectorB.coinName}_${state.selectorA.coinName}`
+                ] || '0'
+              } ${state.selectorA.coinName}`}</span>
+            </div>
+            <div className="flex w-full items-center justify-end px-2 py-1">
+              <LinearProgressBar min={0} max={30} value={refresh} />
+            </div>
           </div>
         )}
       </div>
