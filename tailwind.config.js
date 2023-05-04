@@ -15,6 +15,9 @@ module.exports = {
       '6xl': '4rem',
     },
     extend: {
+      backgroundImage: {
+        'rocket-icon': "url('/rocketship.png')",
+      },
       colors: {
         gray: {
           100: '#f7fafc',

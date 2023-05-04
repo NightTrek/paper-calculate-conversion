@@ -1,186 +1,154 @@
-import { useRouter } from 'next/router';
+/* eslint-disable tailwindcss/no-custom-classname */
+import Image from 'next/image';
+import * as React from 'react';
 
+import CoinSelectorButton from '@/components/CoinSelectorButton';
+import SwapButton from '@/components/SwapButtonDivider/SwapButtonDivider';
+import { COINS } from '@/config/CoinConfig';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
 
-const Index = () => {
-  const router = useRouter();
+type ISelectorState = {
+  coinName: string | null;
+  inputState: string;
+};
+
+type ISwapState = {
+  selectorA: ISelectorState;
+  selectorB: ISelectorState;
+  selection: string[];
+};
+
+type IPriceState = { [key: string]: string };
+
+const Swap = () => {
+  const [state, setState] = React.useState<ISwapState>({
+    selectorA: { coinName: null, inputState: '' },
+    selectorB: { coinName: null, inputState: '' },
+    selection: Object.keys(COINS),
+  });
+
+  const [prices, setPrices] = React.useState<IPriceState>({
+    USD_USD: '1',
+  });
+
+  React.useEffect(() => {
+    // fetch the prices somehow
+    // return the prices
+    setPrices({ ...prices, USD_USD: '1' });
+  }, [prices, state.selectorA.coinName, state.selectorB.coinName]);
+
+  const setSelectorInput = (selectorA: boolean, input: string) => {
+    if (selectorA) {
+      setState({
+        ...state,
+        selectorA: {
+          ...state.selectorA,
+          inputState: input,
+        },
+      });
+      return;
+    }
+    setState({
+      ...state,
+      selectorB: {
+        ...state.selectorB,
+        inputState: input,
+      },
+    });
+  };
+
+  const setSelectorCoinName = (selectorA: boolean, coinName: string) => {
+    const newSelectionList = state.selection.filter((coin) => {
+      if (coin === coinName) return false;
+      return true;
+    });
+    if (selectorA) {
+      newSelectionList.push(state.selectorA.coinName as string);
+      setState({
+        ...state,
+        selectorA: {
+          ...state.selectorA,
+          coinName,
+        },
+        selection: newSelectionList,
+      });
+      return;
+    }
+    newSelectionList.push(state.selectorB.coinName as string);
+    setState({
+      ...state,
+      selectorB: {
+        ...state.selectorB,
+        coinName,
+      },
+      selection: newSelectionList,
+    });
+  };
+
+  const handleSwapButton = () => {
+    setState({
+      ...state,
+      selectorA: state.selectorB,
+      selectorB: state.selectorA,
+    });
+  };
 
   return (
     <Main
       meta={
         <Meta
-          title="Next.js Boilerplate Presentation"
-          description="Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework."
+          title="Next.js n"
+          description="Next js is the perfect starter code for your project. Build your React application with the Next.js framework."
         />
       }
     >
-      <a href="https://github.com/ixartz/Next-js-Boilerplate">
-        <img
-          src={`${router.basePath}/assets/images/nextjs-starter-banner.png`}
-          alt="Nextjs starter banner"
-        />
-      </a>
-      <h2 className="text-2xl font-bold">
-        Boilerplate code for your Nextjs project with Tailwind CSS
-      </h2>
-      <p>
-        <span role="img" aria-label="rocket">
-          🚀
-        </span>{' '}
-        Next.js Boilerplate is a starter code for your Next js project by
-        putting developer experience first .{' '}
-        <span role="img" aria-label="zap">
-          ⚡️
-        </span>{' '}
-        Made with Next.js, TypeScript, ESLint, Prettier, Husky, Lint-Staged,
-        VSCode, Netlify, PostCSS, Tailwind CSS.
-      </p>
-      <h3 className="text-lg font-semibold">Next js Boilerplate Features</h3>
-      <p>Developer experience first:</p>
-      <ul>
-        <li>
-          <span role="img" aria-label="fire">
-            🔥
-          </span>{' '}
-          <a href="https://nextjs.org" rel="nofollow">
-            Next.js
-          </a>{' '}
-          for Static Site Generator
-        </li>
-        <li>
-          <span role="img" aria-label="art">
-            🎨
-          </span>{' '}
-          Integrate with{' '}
-          <a href="https://tailwindcss.com" rel="nofollow">
-            Tailwind CSS
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="nail_care">
-            💅
-          </span>{' '}
-          PostCSS for processing Tailwind CSS
-        </li>
-        <li>
-          <span role="img" aria-label="tada">
-            🎉
-          </span>{' '}
-          Type checking Typescript
-        </li>
-        <li>
-          <span role="img" aria-label="pencil2">
-            ✏️
-          </span>{' '}
-          Linter with{' '}
-          <a href="https://eslint.org" rel="nofollow">
-            ESLint
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="hammer_and_wrench">
-            🛠
-          </span>{' '}
-          Code Formatter with{' '}
-          <a href="https://prettier.io" rel="nofollow">
-            Prettier
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="fox_face">
-            🦊
-          </span>{' '}
-          Husky for Git Hooks
-        </li>
-        <li>
-          <span role="img" aria-label="no_entry_sign">
-            🚫
-          </span>{' '}
-          Lint-staged for running linters on Git staged files
-        </li>
-        <li>
-          <span role="img" aria-label="no_entry_sign">
-            🗂
-          </span>{' '}
-          VSCode configuration: Debug, Settings, Tasks and extension for
-          PostCSS, ESLint, Prettier, TypeScript
-        </li>
-        <li>
-          <span role="img" aria-label="robot">
-            🤖
-          </span>{' '}
-          SEO metadata, JSON-LD and Open Graph tags with Next SEO
-        </li>
-        <li>
-          <span role="img" aria-label="robot">
-            ⚙️
-          </span>{' '}
-          <a
-            href="https://www.npmjs.com/package/@next/bundle-analyzer"
-            rel="nofollow"
-          >
-            Bundler Analyzer
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="rainbow">
-            🌈
-          </span>{' '}
-          Include a FREE minimalist theme
-        </li>
-        <li>
-          <span role="img" aria-label="hundred">
-            💯
-          </span>{' '}
-          Maximize lighthouse score
-        </li>
-      </ul>
-      <p>Built-in feature from Next.js:</p>
-      <ul>
-        <li>
-          <span role="img" aria-label="coffee">
-            ☕
-          </span>{' '}
-          Minify HTML &amp; CSS
-        </li>
-        <li>
-          <span role="img" aria-label="dash">
-            💨
-          </span>{' '}
-          Live reload
-        </li>
-        <li>
-          <span role="img" aria-label="white_check_mark">
-            ✅
-          </span>{' '}
-          Cache busting
-        </li>
-      </ul>
-      <h3 className="text-lg font-semibold">Our Stater code Philosophy</h3>
-      <ul>
-        <li>Minimal code</li>
-        <li>SEO-friendly</li>
-        <li>
-          <span role="img" aria-label="rocket">
-            🚀
-          </span>{' '}
-          Production-ready
-        </li>
-      </ul>
-      <p>
-        Check our GitHub project for more information about{' '}
-        <a href="https://github.com/ixartz/Next-js-Boilerplate">
-          Nextjs Boilerplate
-        </a>
-        . You can also browse our{' '}
-        <a href="https://creativedesignsguru.com/category/nextjs/">
-          Premium NextJS Templates
-        </a>{' '}
-        on our website to support this project.
-      </p>
+      <div className="flex h-full  w-full flex-col justify-between">
+        <div className="flex h-1/2 w-full flex-col items-start justify-start py-4 pb-2">
+          <div className="pb-4 text-2xl font-bold">From</div>
+          <CoinSelectorButton
+            coinList={state.selection}
+            coinName={state.selectorA.coinName}
+            setCoinName={(coin) => {
+              setSelectorCoinName(true, coin);
+            }}
+            setInputChange={(input) => {
+              setSelectorInput(true, input);
+            }}
+            inputState={state.selectorA.inputState}
+            isInput
+          />
+          {/*  Swap button central area */}
+          <SwapButton handleSwapButton={handleSwapButton} />
+          {/*  */}
+
+          <CoinSelectorButton
+            isInput={false}
+            coinList={state.selection}
+            coinName={state.selectorB.coinName}
+            setCoinName={(coin) => {
+              setSelectorCoinName(false, coin);
+            }}
+            setInputChange={(input) => {
+              setSelectorInput(false, input);
+            }}
+            inputState={state.selectorB.inputState}
+          />
+        </div>
+        {/*  Pricing Notation */}
+        {state.selectorA.coinName && state.selectorB.coinName && (
+          <div className="flex w-full items-center justify-start p-2">
+            <Image src="/Icons/Info.svg" alt="info" width={24} height={24} />
+            <span className="px-2">{`1 ${state.selectorB.coinName} = ${
+              prices[
+                `${state.selectorB.coinName}_${state.selectorA.coinName}`
+              ] || '0'
+            } ${state.selectorA.coinName}`}</span>
+          </div>
+        )}
+      </div>
     </Main>
   );
 };
 
-export default Index;
+export default Swap;
