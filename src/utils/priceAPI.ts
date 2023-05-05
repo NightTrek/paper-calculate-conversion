@@ -63,17 +63,18 @@ export const FetchCoinMarketCapPrice = (
         res.json().then((data) => {
           if (
             // seems to error every time now
-            !data ||
-            !data.data ||
-            !data.data[req.coinTo.toUpperCase()] ||
-            !data.data[req.coinTo.toUpperCase()][0] ||
-            !data.data[req.coinTo.toUpperCase()][0].quote ||
-            !data.data[req.coinTo.toUpperCase()][0].quote[
+            // TODO fix the error handling
+            data == null ||
+            data.data == null ||
+            data.data[req.coinTo.toUpperCase()] == null ||
+            data.data[req.coinTo.toUpperCase()][0] == null ||
+            data.data[req.coinTo.toUpperCase()][0].quote == null ||
+            data.data[req.coinTo.toUpperCase()][0].quote[
               req.coinFrom.toUpperCase()
-            ] ||
-            !data.data[req.coinTo.toUpperCase()][0].quote[
+            ] == null ||
+            data.data[req.coinTo.toUpperCase()][0].quote[
               req.coinFrom.toUpperCase()
-            ].price
+            ].price == null
           ) {
             reject(
               new Error(
@@ -114,7 +115,6 @@ export const FetchNextCryptoPriceAPI = (
         clearTimeout(timeoutID);
         if (!res.ok) reject(new Error(`[NEXT API ERR]: ${res.status}`));
         res.json().then((data) => {
-          console.log(data);
           resolve({
             key: `${req.coinTo}_${req.coinFrom}`,
             value: data.value,

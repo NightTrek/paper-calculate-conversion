@@ -24,13 +24,13 @@ type ISelectionModalProps = {
 const CoinSelectionModal = (props: ISelectionModalProps) => {
   if (!props.coinNameSelector) return <div />;
   return (
-    <div className="no-scrollbar absolute left-0 top-[64px] z-20 flex h-[256px] w-full flex-col content-evenly justify-start overflow-y-scroll rounded-2xl bg-white shadow-md">
+    <div className="no-scrollbar absolute left-0 top-[92px] z-20 flex h-[256px] w-full flex-col content-evenly justify-start overflow-y-scroll rounded-2xl border-2 border-paperBlue-100 bg-paperBlue-300 shadow-md">
       {props.coinList.map((coinName, index) => {
         if (!coinName) return <div key={index} />;
         return (
           <div
             key={index}
-            className="my-1 flex cursor-pointer items-center justify-between rounded-lg px-2 py-1 hover:bg-gray-300 active:bg-gray-300"
+            className="my-1 flex cursor-pointer items-center justify-between rounded-lg px-2 py-1 hover:bg-paperBlue-400 active:bg-paperBlue-400"
             onClick={() => {
               props.setCoinName(coinName);
               props.setCoinNameSelector(false);
@@ -42,10 +42,10 @@ const CoinSelectionModal = (props: ISelectionModalProps) => {
                 alt={coinName}
                 width={48}
                 height={48}
-                className="pr-2"
+                className="pr-4"
               />
               <div className="flex flex-col items-start justify-between">
-                <span className="px-1 text-black">
+                <span className="px-1 text-paperWhite-100">
                   {COINS[coinName]?.coinName}
                 </span>
                 <span className="px-1 text-base text-gray-500">
@@ -75,16 +75,11 @@ const CoinSelectorButton = (props: ISelectorBoxProps) => {
   if (props.coinName && COINS[props.coinName]) {
     return (
       <div className="relative flex w-full flex-col items-start py-2">
-        <div
-          className="my-2 flex w-full items-center justify-between"
-          onClick={() => {
-            setCoinNameSelector(!coinNameSelector);
-          }}
-        >
+        <div className="my-2 flex w-full items-center justify-between">
           <div className="flex items-center">
             {/* Hover Button */}
             <div
-              className="ml-1 flex cursor-pointer items-center justify-center rounded-full bg-slate-200 px-2 py-1 hover:bg-slate-300 active:bg-slate-300"
+              className="ml-1 flex cursor-pointer items-center justify-center rounded-full bg-paperWhite-100 p-2 hover:bg-paperWhite-200 active:bg-paperWhite-200"
               onClick={() => {
                 setCoinNameSelector(!coinNameSelector);
               }}
@@ -96,9 +91,9 @@ const CoinSelectorButton = (props: ISelectorBoxProps) => {
                 alt="ETH"
                 width={32}
                 height={32}
-                className="pr-2"
+                className=" pr-2"
               />
-              <span className="px-1 text-slate-600">
+              <span className="px-1 text-paperBlue-400">
                 {COINS[props.coinName]?.coinTicker || 'ETH'}
               </span>
               <Image
@@ -111,22 +106,28 @@ const CoinSelectorButton = (props: ISelectorBoxProps) => {
           </div>
         </div>
         {props.isInput && (
-          <div className="my-2 flex w-auto items-center">
-            <input
-              id="input-id"
-              className="bgBody w-auto min-w-0 px-1 py-2"
-              type="text"
-              name="ETH"
-              placeholder="0.0"
-              value={props.inputState}
-              onChange={(event: { target: { value: string } }) => {
-                if (!isFloat(event.target.value)) return;
-                props.setInputChange(event.target.value);
-              }}
-            />
-            <span className="px-1 text-gray-200">
-              {COINS[props.coinName]?.coinTicker || 'ETH'}
+          <div className="mt-8 flex w-full items-center justify-between px-2">
+            <span className="px-1 pr-3 text-xl text-paperWhite-100 sm:text-3xl">
+              From
             </span>
+            <div className="flex items-center">
+              {' '}
+              <input
+                id="input-id"
+                className="max-w-[184px] bg-paperBlue-300 p-2 text-right text-xl text-paperWhite-100 focus:border-0 sm:max-w-[320px] sm:text-3xl"
+                type="text"
+                name="ETH"
+                placeholder="0.0"
+                value={props.inputState}
+                onChange={(event: { target: { value: string } }) => {
+                  if (!isFloat(event.target.value)) return;
+                  props.setInputChange(event.target.value);
+                }}
+              />
+              <span className="px-2 text-xl font-semibold text-paperWhite-100 sm:text-3xl">
+                {COINS[props.coinName]?.coinTicker || 'ETH'}
+              </span>
+            </div>
           </div>
         )}
 
@@ -147,13 +148,13 @@ const CoinSelectorButton = (props: ISelectorBoxProps) => {
         <div className="flex items-center">
           {/* Hoverable Button */}
           <div
-            className="ml-1 flex cursor-pointer items-center justify-center rounded-full bg-slate-200 px-2 py-1 hover:bg-slate-300 active:bg-slate-300"
+            className="ml-1 flex cursor-pointer items-center justify-center rounded-full  bg-paperWhite-100 p-2 hover:bg-paperWhite-200 active:bg-paperWhite-200"
             onClick={() => {
               setCoinNameSelector(!coinNameSelector);
             }}
           >
-            <div className="mr-2 h-[24px] w-[24px] rounded-full bg-black opacity-10" />
-            <span className="px-1 text-black">Choose Coin</span>
+            <div className="mr-2 h-[24px] w-[24px] rounded-full bg-paperBlue-400 opacity-20" />
+            <span className="px-1 text-paperBlue-500">Choose Coin</span>
             <Image
               src="/Icons/Cheveron-Down.svg"
               alt="down"

@@ -51,16 +51,13 @@ const Swap = () => {
 
   // price fetching API handler
   React.useEffect(() => {
-    if (state.selectorA.coinName === null || state.selectorB.coinName === null)
+    if (state.selectorA.coinName == null || state.selectorB.coinName == null)
       return;
     const coinFrom = state.selectorA.coinName;
     const coinTo = state.selectorB.coinName;
     if (!prices[`${coinTo}_${coinFrom}`] || refresh < 1) {
       // if the price has never been searched seach it and reset the refresh
       // if the refresh is down to 0 also search it.
-
-      console.log('fetching API');
-      // setRefresh(30);
       FetchNextCryptoPriceAPI({ coinFrom, coinTo })
         .then((data) => {
           if (data.key !== `${coinTo}_${coinFrom}`)
@@ -80,7 +77,7 @@ const Swap = () => {
 
   // Math and conversion Handler
   React.useEffect(() => {
-    if (state.selectorA.coinName === null || state.selectorB.coinName === null)
+    if (state.selectorA.coinName == null || state.selectorB.coinName == null)
       return;
     if (
       parseFloat(state.selectorA.inputState) > 0 &&
@@ -179,9 +176,8 @@ const Swap = () => {
         />
       }
     >
-      <div className="flex h-full  w-full flex-col justify-between">
-        <div className="flex h-1/2 w-full flex-col items-start justify-start py-4 pb-2">
-          <div className="pb-4 text-2xl font-bold">From</div>
+      <div className="flex h-full  w-full flex-col justify-between ">
+        <div className="flex h-1/2 w-full flex-col items-start justify-start">
           <CoinSelectorButton
             coinList={state.selection}
             coinName={state.selectorA.coinName}
@@ -211,23 +207,25 @@ const Swap = () => {
             inputState={state.selectorB.inputState}
           />
         </div>
-        <div className="flex h-[48px] w-full items-center justify-between px-2">
+        <div className="flex h-[92px] w-full items-center px-0 pb-4 pt-6 text-paperWhite-100 sm:px-2">
           {state.selectorB.coinName && (
-            <>
-              <div className="pb-4 text-2xl font-bold">To</div>
+            <div className="flex w-full items-end justify-between">
+              <div className="text-xl font-bold sm:text-3xl ">To</div>
               <div>
-                <span className="text-3xl">{state.selectorB.inputState} </span>
-                <span className="px-2 text-3xl font-semibold">
+                <span className="text-xl sm:text-3xl">
+                  {state.selectorB.inputState}{' '}
+                </span>
+                <span className="px-2 text-xl font-semibold sm:text-3xl">
                   {state.selectorB.coinName}
                 </span>
               </div>
-            </>
+            </div>
           )}
         </div>
         {/*  Pricing Disclamer Notation */}
         {state.selectorA.coinName && state.selectorB.coinName && (
-          <div className="flex w-full flex-col items-center justify-evenly">
-            <div className="flex w-full items-center justify-between p-2">
+          <div className="flex w-full flex-col items-center justify-evenly text-paperBlue-100">
+            <div className="flex w-full items-center justify-between p-2 px-0 text-lg sm:px-2 sm:text-xl ">
               <Image src="/Icons/Info.svg" alt="info" width={24} height={24} />
               <span className="px-2">{`1 ${state.selectorB.coinName} = ${
                 prices[
@@ -236,7 +234,7 @@ const Swap = () => {
               } ${state.selectorA.coinName}`}</span>
             </div>
             <div className="flex w-full items-center justify-end px-2 py-1">
-              <LinearProgressBar min={0} max={30} value={refresh} />
+              <LinearProgressBar min={0} max={30} value={refresh} rotate />
             </div>
           </div>
         )}

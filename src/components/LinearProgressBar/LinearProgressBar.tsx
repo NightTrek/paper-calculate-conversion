@@ -37,15 +37,18 @@ interface IProgressprops {
   value: number;
   max: number;
   min?: number;
+  rotate?: boolean;
 }
 
 const LinearProgressBar = (props: IProgressprops) => {
   const { value, max } = props;
   const min = props.min || 0;
   const percentage = ((value - min) / (max - min)) * 100;
+  let rotate = '';
+  if (props.rotate) rotate = 'rotate-180';
   return (
     <div className="h-full w-full">
-      <div className="h-4 w-full rounded-full bg-slate-400">
+      <div className={`h-4 w-full rounded-full bg-slate-400 ${rotate}`}>
         <div
           className={` h-4 rounded-full`}
           style={{

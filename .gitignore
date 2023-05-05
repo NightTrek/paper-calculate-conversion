@@ -49,3 +49,5 @@ local
 
 # vercel
 .vercel
+
+.code-workspace.code-workspace

@@ -18,6 +18,10 @@ module.exports = {
       backgroundImage: {
         'rocket-icon': "url('/rocketship.png')",
       },
+      grayscale: {
+        50: '40%',
+        20: '20%',
+      },
       colors: {
         gray: {
           100: '#f7fafc',
@@ -40,6 +44,16 @@ module.exports = {
           700: '#2b6cb0',
           800: '#2c5282',
           900: '#2a4365',
+        },
+        paperWhite: {
+          100: '#FFFFFF',
+          200: '#CCCCCC',
+        },
+        paperBlue: {
+          100: '#39D0FF',
+          300: '#081E28',
+          400: '#031013',
+          500: '1A202C',
         },
       },
     },

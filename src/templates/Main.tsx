@@ -8,14 +8,14 @@ type IMainProps = {
 };
 
 const Main = (props: IMainProps) => (
-  <div className="bgBody w-full text-gray-700 antialiased ">
+  <div className="h-full w-full antialiased ">
     {props.meta}
-    <div className=" flex h-full w-full items-start justify-center">
-      <div className="outerShadow relative my-12 max-w-2xl rounded-xl">
-        <header className="w-full rounded-t  border-2">
+    <div className="flex h-full  w-full items-center justify-center">
+      <div className=" relative my-12 h-full w-full max-w-2xl rounded-xl  border-paperBlue-100 sm:mt-24 sm:border-2 lg:max-w-4xl">
+        <header className=" w-full">
           <HeaderNav />
         </header>
-        <div className="mx-auto px-4">
+        <div className="mx-auto h-full bg-paperBlue-300 px-4 sm:rounded-b-[12px]">
           <main className="content py-5 text-xl">{props.children}</main>
         </div>
       </div>
