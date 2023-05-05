@@ -207,7 +207,7 @@ const Swap = () => {
             inputState={state.selectorB.inputState}
           />
         </div>
-        <div className="flex h-[92px] w-full items-center px-0 pb-4 pt-6 text-paperWhite-100 sm:px-2">
+        <div className="flex h-[92px] w-full items-center px-0 py-4 text-paperWhite-100 sm:px-2">
           {state.selectorB.coinName && (
             <div className="flex w-full items-end justify-between">
               <div className="text-xl font-bold sm:text-3xl ">To</div>

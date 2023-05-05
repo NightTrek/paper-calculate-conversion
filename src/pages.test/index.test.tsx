@@ -7,14 +7,14 @@ import Index from '@/pages/index';
 
 describe('Index page', () => {
   describe('Render method', () => {
-    it('should have h1 tag', () => {
+    // it should render the Main Template component
+    it('should render the Main Template component', () => {
       render(<Index />);
 
-      const heading = screen.getByRole('heading', {
-        name: /Boilerplate code/,
-      });
+      // check if the main content section is present
+      const mainContent = screen.getByTestId('MainTemplate');
 
-      expect(heading).toBeInTheDocument();
+      expect(mainContent).toBeInTheDocument();
     });
   });
 });

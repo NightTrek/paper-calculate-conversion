@@ -106,7 +106,7 @@ const CoinSelectorButton = (props: ISelectorBoxProps) => {
           </div>
         </div>
         {props.isInput && (
-          <div className="mt-8 flex w-full items-center justify-between px-2">
+          <div className="mt-4 flex w-full items-center justify-between px-2">
             <span className="px-1 pr-3 text-xl text-paperWhite-100 sm:text-3xl">
               From
             </span>
