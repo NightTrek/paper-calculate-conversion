@@ -28,6 +28,18 @@ export const COINS: CoinType = {
     coinIcon: '/TokenIcons/DollarIcon.svg',
     coinPrice: '1',
   },
+  MATIC: {
+    coinName: 'Polygon',
+    coinTicker: 'MATIC',
+    coinPrice: '5',
+    coinIcon: '/TokenIcons/Polygon.png',
+  },
+  AVAX: {
+    coinName: 'Avalanche',
+    coinTicker: 'AVAX',
+    coinPrice: '100',
+    coinIcon: '/TokenIcons/avax.png',
+  },
   USDC: {
     coinName: 'USD Coin',
     coinTicker: 'USDC',

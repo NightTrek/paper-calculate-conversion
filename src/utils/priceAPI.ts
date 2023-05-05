@@ -62,8 +62,7 @@ export const FetchCoinMarketCapPrice = (
         if (!res.ok) reject(new Error(`[coinmarketcap ERR]: ${res.status}`));
         res.json().then((data) => {
           if (
-            // seems to error every time now
-            // TODO fix the error handling
+            // Prevents lack of a defined price from delaying the app
             data == null ||
             data.data == null ||
             data.data[req.coinTo.toUpperCase()] == null ||
